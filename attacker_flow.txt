@@ -1,0 +1,153 @@
+# Attacker’s Perspective (with ATT&CK mapping)
+
+## 1) Initial access via public web application
+
+**Objective**:
+Get a foothold on the payment site
+
+**Narrative**:
+The attacker finds SQL injection on the payment service and sends crafted input to the public endpoint to break the query.
+
+**Evidence left**:
+Web server access logs with anomalous query parameters, database error logs, pfSense WAF logs, if any.
+
+**ATT&CK tactic/technique/ID**:
+Initial Access  :  Exploit Public Facing Application  :  **T1190**.
+
+**Design options (implementation notes)**:
+Deploy a simple payment endpoint with a blind SQLi in an ID field. Enable verbose application and database logging to capture attacker activity and make the activity pattern visible during review.
+
+## 2) Gain code execution from the database
+
+**Objective**:
+Turn the SQL injection into remote code execution.
+
+**Narrative**:
+Using stacked queries or a database procedure the attacker runs system commands from the database. On MSSQL this can be xp_cmdshell. On MySQL or Postgres this can be user defined functions or copy to a writable web path.
+
+**Evidence left**:
+database audit logs showing procedure calls, new temp files, unusual service account activity, command output written to tables or files.
+
+**ATT&CK tactic/technique/ID**:
+Execution  :  Exploitation for Client Execution  :  **T1203**.
+
+**Design options (implementation notes)**:
+Provide a seeded database user with high rights for the exercise. Pre-create a low-friction path to drop a web shell into the application directory so the attacker can pivot from SQL to shell.
+
+## 3) Establish a web shell
+
+**Objective**:
+Keep interactive control of the web server.
+
+**Narrative**:
+The attacker writes a small web script that runs commands and stores it in the application folder, then tests it to confirm RCE.
+
+**Evidence left**:
+New file with recent timestamps in the web root directory, unusual responses in access logs, child processes spawned by the web server.
+
+**ATT&CK tactic/technique/ID**:
+Execution  :  Server Side Script Execution  :  **T1059.005**.
+
+**Design options (implementation notes)**:
+Place a minimal one‑line shell in a predictable path and monitor for HTTP GET requests to that path. Expose process trees on the host so attacker requests can be tied to spawned processes.
+
+## 4) Recon the host and users
+
+**Objective**:
+Learn which users are present on the server and what files exist.
+
+**Narrative**:
+The attacker lists user directories, checks running services, and looks for domain or local accounts.
+
+**Evidence left**:
+Shell history, command line audit events, file access timestamps on user directories.
+
+**ATT&CK tactic/technique/ID**:
+Discovery  :  Account Discovery  :  **T1087.001**.
+
+**Design options (implementation notes)**:
+Seed user directories with realistic names and make sure audit is enabled for process creation so recon shows up in logs.
+
+## 5) Find credentials in files
+
+**Objective**:
+Obtain usable secrets to accelerate access.
+
+**Narrative**:
+In Josie’s workspace the attacker finds a plaintext note with API keys and a saved database connection string that includes a password.
+
+**Evidence left**:
+File open events on Josie’s directory, possible read events on secret files, AV or EDR alerts for credential harvest tools if used.
+
+**ATT&CK tactic/technique/ID**:
+Credential Access  :  Credentials in Files  :  **T1552.001**.
+
+**Design options (implementation notes)**:
+Place a clear text creds.txt in Josie’s home with synthetic but functional secrets. Add a breadcrumb that records access time for later correlation with attacker activity.
+
+## 6) Modify the payment component for silent data capture
+
+**Objective**:
+Collect payment data during normal use.
+
+**Narrative**:
+The attacker edits the backend payment code so that on each checkout it copies card data and buyer information to a hidden queue.
+
+**Evidence left**: Hash or size change on the payment controller file. Date modified is very recent and does not match the other files' modification date.
+
+**ATT&CK tactic/technique/ID**:
+Persistence  :  Server Software Component  :  **T1505**.
+
+**Design options (implementation notes)**:
+Attacker modifies the relevant web server file by adding a new function that exfiltrates payment information. Turn on file integrity monitoring to surface the edit.
+
+## 7) Masquerade the change
+
+**Objective**:
+Blend in and avoid quick rollback.
+
+**Narrative**:
+The attacker keeps function names and comments consistent with project style, reuses logging tags, and bumps a minor version string to look like a routine patch.
+
+**Evidence left**:
+Git history that does not match CI user, commit from the web server service account, version string change without a ticket.
+
+**ATT&CK tactic/technique/ID**:
+Defense Evasion  :  Masquerading  :  **T1036**.
+
+**Design options (implementation notes)**:
+Give the application a fake repo directory and a service account that can write. Log who commits and the source host so the mismatch is obvious in review.
+
+## 8) Collect and exfiltrate payment data
+
+**Objective**:
+Get the stolen data out with low profile.
+
+**Narrative**:
+On each transaction the code sends a minimal JSON payload to an external webhook that the attacker controls. If the webhook is down it caches locally for later transmission.
+
+**Evidence left**:
+Outbound HTTPS to a new domain, small POST bodies at purchase time, local cache file growth when offline.
+
+**ATT&CK tactic/technique/ID**:
+Collection  :  Data from Information Repositories  :  **T1213**; Exfiltration  :  Exfiltration Over Web Service  :  **T1567.004**.
+
+**Design options (implementation notes)**:
+Direct the exfiltration to a harmless mock endpoint in the lab. Add a simple network rule and dashboard to spotlight new egress destinations and POST frequency.
+
+## 9) Survive restarts
+
+**Objective**:
+Keep data capture after the service or host restarts.
+
+**Narrative**:
+The attacker modifies the relevant web server file by adding a new function that exfiltrates payment info. The code sits in the main path that loads on start, so it persists across restarts. No additional startup scripts are used.
+
+**Evidence left**:
+Hash or size change on payment controller or middleware files, package signature mismatch with the golden image, and recently modified timestamps on the edited files.
+
+**ATT&CK tactic/technique/ID**:
+Persistence  :  Server Software Component  :  **T1505**.
+
+**Design options (implementation notes)**:
+Bake the change into the application file that loads at startup (for example the payment controller or middleware) so it persists across restarts. If the application runs in a container, modify the image or use a persistent bind mount so the edited file remains. Use file integrity monitoring and image signing to detect the change; compare against a known-good baseline.

