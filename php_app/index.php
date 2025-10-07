@@ -28,6 +28,7 @@
                 <li><a href="index.php?file=home.php">Home</a></li>
                 <li><a href="index.php?file=about.php">About</a></li>
                 <li><a href="index.php">Shop</a></li>
+                <li><a href="index.php?file=upload.php">Upload Receipt</a></li>
                 <li><a href="index.php?file=contact.php">Contact</a></li>
             </ul>
         </nav>

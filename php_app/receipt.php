@@ -29,54 +29,32 @@ if ($id !== '') {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>SkyTech Drones - Order Tracking</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header class="header">
-        <nav class="nav">
-            <a href="home.php" class="logo">🚁 SkyTech Drones</a>
-            <ul class="nav-links">
-                <li><a href="home.php">Home</a></li>
-                <li><a href="about.php">About</a></li>
-                <li><a href="index.php">Shop</a></li>
-                <li><a href="contact.php">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main class="main">
-        <div class="container">
-            <h2 class="page-title">📦 Order Confirmation</h2>
-            
-            <?php if ($receipt): ?>
-                <div class="receipt-card">
-                    <h3>🚁 Drone Order Details</h3>
-                    <p><strong>Order ID:</strong> #ORD-<?= htmlspecialchars($receipt['id']) ?></p>
-                    <p><strong>Customer:</strong> <?= htmlspecialchars($receipt['username']) ?></p>
-                    <p><strong>Product:</strong> SkyTech Pro X1 Drone</p>
-                    <p><strong>Price:</strong> $<?= htmlspecialchars($receipt['balance']) ?></p>
-                    <p><strong>Order Date:</strong> <?= date('M d, Y - H:i:s') ?></p>
-                    <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ Confirmed - Ships in 2-3 days</span></p>
-                </div>
-            <?php elseif ($error): ?>
-                <div class="alert alert-error">❌ <?= htmlspecialchars($error) ?></div>
-            <?php endif; ?>
-            
-            <form method="get">
-                <div class="form-group">
-                    <label for="id">🔍 Enter Order ID</label>
-                    <input type="text" id="id" name="id" placeholder="e.g., 1, 2, 3..." required>
-                </div>
-                <button type="submit">Track Order</button>
-            </form>
-            
-            <a href="index.php" class="back-link">← Shop More Drones</a>
+<div class="container">
+    <h2 class="page-title">📦 Order Confirmation</h2>
+    
+    <?php if ($receipt): ?>
+        <div class="receipt-card">
+            <h3>🚁 Drone Order Details</h3>
+            <p><strong>Order ID:</strong> #ORD-<?= htmlspecialchars($receipt['id']) ?></p>
+            <p><strong>Customer:</strong> <?= $receipt['username'] ?></p>
+            <p><strong>Product:</strong> SkyTech Pro X1 Drone</p>
+            <p><strong>Price:</strong> $<?= htmlspecialchars($receipt['balance']) ?></p>
+            <p><strong>Order Date:</strong> <?= date('M d, Y - H:i:s') ?></p>
+            <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ Confirmed - Ships in 2-3 days</span></p>
         </div>
-    </main>
-</body>
-</html>
+    <?php elseif ($error): ?>
+        <div class="alert alert-error">❌ <?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
+    
+    <form method="get">
+        <input type="hidden" name="file" value="receipt.php">
+        <div class="form-group">
+            <label for="id">🔍 Enter Order ID</label>
+            <input type="text" id="id" name="id" placeholder="e.g., 1, 2, 3..." required>
+        </div>
+        <button type="submit">Track Order</button>
+    </form>
+    
+    <a href="index.php" class="back-link">← Shop More Drones</a>
+</div>
