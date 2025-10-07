@@ -9,12 +9,12 @@
 <body>
     <header class="header">
         <nav class="nav">
-            <a href="home.php" class="logo">🚁 SkyTech Drones</a>
+            <a href="index.php?file=home.php" class="logo">🚁 SkyTech Drones</a>
             <ul class="nav-links">
-                <li><a href="home.php">Home</a></li>
-                <li><a href="about.php">About</a></li>
-                <li><a href="index.html">Shop</a></li>
-                <li><a href="contact.php">Contact</a></li>
+                <li><a href="index.php?file=home.php">Home</a></li>
+                <li><a href="index.php?file=about.php">About</a></li>
+                <li><a href="index.php">Shop</a></li>
+                <li><a href="index.php?file=contact.php">Contact</a></li>
             </ul>
         </nav>
     </header>
