@@ -42,7 +42,7 @@
 
         <div class="container">
             <h2>Start Shopping</h2>
-            <a href="index.html">
+            <a href="index.php">
                 <button>🛒 Browse Drones</button>
             </a>
             <a href="receipt.php">

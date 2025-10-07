@@ -23,12 +23,12 @@
     
     <header class="header">
         <nav class="nav">
-            <a href="index.html" class="logo">� SkyTech Drones</a>
+            <a href="index.php" class="logo">� SkyTech Drones</a>
             <ul class="nav-links">
-                <li><a href="index.html?file=home.php">Home</a></li>
-                <li><a href="index.html?file=about.php">About</a></li>
-                <li><a href="index.html">Shop</a></li>
-                <li><a href="index.html?file=contact.php">Contact</a></li>
+                <li><a href="index.php?file=home.php">Home</a></li>
+                <li><a href="index.php?file=about.php">About</a></li>
+                <li><a href="index.php">Shop</a></li>
+                <li><a href="index.php?file=contact.php">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -66,11 +66,11 @@
             document.getElementById('paymentForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 // Always show receipt link for demo (simulate receipt ID = 1)
-                document.getElementById('receipt-link').innerHTML = `<div class='alert alert-success'>✅ Drone purchase successful! <a href='index.html?file=receipt.php&id=1' style='color: #155724; font-weight: bold;'>View Order Confirmation →</a></div>`;
+                document.getElementById('receipt-link').innerHTML = `<div class='alert alert-success'>✅ Drone purchase successful! <a href='index.php?file=receipt.php&id=1' style='color: #155724; font-weight: bold;'>View Order Confirmation →</a></div>`;
             });
             </script>
             
-            <a href="index.html?file=home.php" class="back-link">← Back to Home</a>
+            <a href="index.php?file=home.php" class="back-link">← Back to Home</a>
         </div>
     </main>
 </body>

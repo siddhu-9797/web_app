@@ -43,7 +43,7 @@ if ($id !== '') {
             <ul class="nav-links">
                 <li><a href="home.php">Home</a></li>
                 <li><a href="about.php">About</a></li>
-                <li><a href="index.html">Shop</a></li>
+                <li><a href="index.php">Shop</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
         </nav>
@@ -75,7 +75,7 @@ if ($id !== '') {
                 <button type="submit">Track Order</button>
             </form>
             
-            <a href="index.html" class="back-link">← Shop More Drones</a>
+            <a href="index.php" class="back-link">← Shop More Drones</a>
         </div>
     </main>
 </body>
