@@ -1,25 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkyTech Drones - About Us</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header class="header">
-        <nav class="nav">
-            <a href="index.php?file=home.php" class="logo">🚁 SkyTech Drones</a>
-            <ul class="nav-links">
-                <li><a href="index.php?file=home.php">Home</a></li>
-                <li><a href="index.php?file=about.php">About</a></li>
-                <li><a href="index.php">Shop</a></li>
-                <li><a href="index.php?file=contact.php">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+<?php
+$page_title = "SkyTech Drones - About Us";
+include 'navbar.php';
+?>
 
-    <main class="main">
         <div class="container">
             <h2 class="page-title">About SkyTech Drones</h2>
             
@@ -44,8 +27,7 @@
                 </ul>
             </div>
 
-            <a href="home.php" class="back-link">← Back to Home</a>
+            <a href="index.php" class="back-link">← Back to Home</a>
         </div>
-    </main>
-</body>
-</html>
+
+<?php include 'footer.php'; ?>

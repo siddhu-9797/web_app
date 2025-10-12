@@ -1,4 +1,5 @@
 <?php
+$page_title = "SkyTech Drones - Upload Receipt";
 // Vulnerable file upload handler
 $upload_dir = 'uploads/';
 $message = '';
@@ -40,50 +41,9 @@ if (is_dir($upload_dir)) {
         }
     }
 }
-?>
 
-<div class="container">
-    <h2 class="page-title">📄 Upload Your Receipt</h2>
-    
-    <div class="upload-section">
-        <p>Had issues with your order? Upload your receipt for verification and support.</p>
-        
-        <?php if ($message): ?>
-            <div class="alert alert-success">✅ <?= $message ?></div>
-        <?php endif; ?>
-        
-        <?php if ($error): ?>
-            <div class="alert alert-error">❌ <?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
-        
-        <form method="post" enctype="multipart/form-data" class="upload-form">
-            <div class="form-group">
-                <label for="receipt">📎 Select Receipt File</label>
-                <input type="file" id="receipt" name="receipt" required>
-                <small>Accepted formats: PDF, JPG, PNG, TXT</small>
-            </div>
-            <button type="submit">Upload Receipt</button>
-        </form>
-    </div>
-    
-    <?php if (!empty($uploaded_files)): ?>
-    <div class="uploaded-files">
-        <h3>📂 Uploaded Receipts</h3>
-        <ul class="file-list">
-            <?php foreach ($uploaded_files as $file): ?>
-                <li>
-                    <a href="uploads/<?= htmlspecialchars($file) ?>" target="_blank">
-                        📄 <?= htmlspecialchars($file) ?>
-                    </a>
-                    <small> - <?= date('M d, Y H:i', filemtime($upload_dir . $file)) ?></small>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-    <?php endif; ?>
-    
-    <a href="index.php" class="back-link">← Back to Shop</a>
-</div>
+include 'navbar.php';
+?>
 
 <style>
 .upload-section {
@@ -138,3 +98,48 @@ if (is_dir($upload_dir)) {
     border: 1px solid #f5c6cb;
 }
 </style>
+
+        <div class="container">
+            <h2 class="page-title">📄 Upload Your Receipt</h2>
+            
+            <div class="upload-section">
+                <p>Had issues with your order? Upload your receipt for verification and support.</p>
+                
+                <?php if ($message): ?>
+                    <div class="alert alert-success">✅ <?= $message ?></div>
+                <?php endif; ?>
+                
+                <?php if ($error): ?>
+                    <div class="alert alert-error">❌ <?= htmlspecialchars($error) ?></div>
+                <?php endif; ?>
+                
+                <form method="post" enctype="multipart/form-data" class="upload-form">
+                    <div class="form-group">
+                        <label for="receipt">📎 Select Receipt File</label>
+                        <input type="file" id="receipt" name="receipt" required>
+                        <small>Accepted formats: PDF, JPG, PNG, TXT</small>
+                    </div>
+                    <button type="submit">Upload Receipt</button>
+                </form>
+            </div>
+            
+            <?php if (!empty($uploaded_files)): ?>
+            <div class="uploaded-files">
+                <h3>📂 Uploaded Receipts</h3>
+                <ul class="file-list">
+                    <?php foreach ($uploaded_files as $file): ?>
+                        <li>
+                            <a href="uploads/<?= htmlspecialchars($file) ?>" target="_blank">
+                                📄 <?= htmlspecialchars($file) ?>
+                            </a>
+                            <small> - <?= date('M d, Y H:i', filemtime($upload_dir . $file)) ?></small>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
+            
+            <a href="index.php" class="back-link">← Back to Shop</a>
+        </div>
+
+<?php include 'footer.php'; ?>
